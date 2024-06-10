@@ -199,19 +199,30 @@ function deleteMessage(stationName, railwayName, index) {
     if (chatData[stationName]) {
         chatData[stationName].splice(index, 1);
         localStorage.setItem('chatData', JSON.stringify(chatData));
-        renderChat(stationName, railwayName); // チャット欄を再描画
+        renderChat(stationName, railwayName);
+
+        // チャットデータが全て削除された場合、chat-station-listから駅を削除
+        if (chatData[stationName].length === 0) {
+            deleteAllMessages(stationName, railwayName);
+        }
     }
 }
-
 
 function deleteAllMessages(stationName, railwayName) {
     const chatData = JSON.parse(localStorage.getItem('chatData')) || {};
     delete chatData[stationName];
     localStorage.setItem('chatData', JSON.stringify(chatData));
-    renderChat(stationName, railwayName);
     
     delete chatStations[stationName];
     updateStationList();
+    renderChat(stationName, railwayName);
+
+    // 一覧から駅を削除
+    const stationList = document.getElementById('station-list');
+    const stationListItem = stationList.querySelector(`li[data-station="${stationName}"]`);
+    if (stationListItem) {
+        stationListItem.remove();
+    }
 }
 
 function loadChatStations() {
