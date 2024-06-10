@@ -3,25 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>東京メトロ千代田線の駅情報メモ</title>
-    <style>
-        #map {
-            height: 60%;
-            width: 100%;
-        }
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
+    <title>東京メトロ駅情報メモ</title>
+    <link href="/css/output.css" rel="stylesheet">
 </head>
 <body>
-    <h1>東京メトロ千代田線の駅情報メモ</h1>
-    <div id="map"></div>
-    <div id="station-info">
-        <h2 id="station-name"></h2>
-        <p id="station-description"></p>
+    <h1 class="p-4 text-4xl font-bold text-center">東京メトロ駅情報メモ</h1>
+    <div id="map" class="h-96 w-screen mx-auto border border-solid rounded-md p-4 m-4"></div>
+    <div id="station-info" class="flex flex-col border border-solid rounded-md p-4 m-4">
+        <h2 id="station-name" class="text-3xl font-bold text-center"></h2>
+        <p id="station-description" class="text-3xl font-bold text-center"></p>
+    </div>
+    <div id="chat-station-list" class="border border-solid rounded-md p-4 m-4">
+        <h2 class="p-4 text-2xl font-bold text-center">メモが保存されている駅</h2>
+        <ul id="station-list" class="text-center">
+        </ul>
     </div>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=[YOUR_GOOGLE_MAP_API_KEY]&callback=initMap" async defer></script>

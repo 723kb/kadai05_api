@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* カスタムスタイル */
+.st-area {
+  @apply flex flex-col;
+}
+
+/* なぜか効かない */
+/* .st-name {
+  @apply text-xl font-bold m-2;
+}
+
+.rw-name {
+  @apply text-lg font-bold m-2;
+} */
+
+.input-chat {
+  @apply flex flex-row:
+}
+
+/* .input {
+  @apply border border-solid rounded-md;
+}
+
+.send-btn {
+  @apply border border-solid rounded-md hover:bg-green-500;
+} */
