@@ -54,7 +54,6 @@ async function fetchNearbyStations(userLocation) {
             const name = station['odpt:stationTitle']['ja'];
             const railwayCode = station['odpt:railway'].split(':')[1];
             const railwayName = getRailwayName(railwayCode);
-            console.log(station);
             const distance = getDistance(userLocation, { lat, lng });
 
             const marker = new google.maps.Marker({
@@ -79,21 +78,12 @@ async function fetchNearbyStations(userLocation) {
 }
 
 function getRailwayName(code) {
-    switch (code) {
-        case 'TokyoMetro.Chiyoda':
-            return '東京メトロ千代田線';
-        case 'TokyoMetro.Yurakucho':
-            return '東京メトロ有楽町線';
-        case 'TokyoMetro.Fukutoshin':
-            return '東京メトロ副都心線';
-        case 'Toei.Asakusa':
-            return '都営地下鉄浅草線';
-        // 他の路線に対する処理を追加
-        default:
-            return '不明な路線';
-    }
+    const railwayNames = {
+        'TokyoMetro.Chiyoda': '東京メトロ千代田線'
+        // 他の路線名もここに追加
+    };
+    return railwayNames[code] || code;
 }
-
 
 function getDistance(location1, location2) {
     const R = 6371;
@@ -126,13 +116,7 @@ function getMarkerIcon(distance) {
 }
 
 function showChatArea(stationName, railwayName, position) {
-    const content = `<div class="st-area">
-    <div class="text-xl font-bold p-2">${railwayName}</div>
-    <div class="text-xl font-bold p-2">${stationName}</div>
-</div>
-<div class="input-chat">
-<input type="text" id="messageInput" class="border border-slate-500 border-solid rounded-md p-2">
-<button id="sendMessageButton" class="p-2 border border-solid rounded-md hover:bg-green-500" onclick="sendMessage('${stationName}', '${railwayName}')">送信</button></div>`;
+    const content = `<div><strong>${stationName}（${railwayName}）</strong><br><input type="text" id="messageInput"><button id="sendMessageButton" onclick="sendMessage('${stationName}', '${railwayName}')">送信</button><div id="chatMessages"></div></div>`;
     infowindow.setContent(content);
     infowindow.setPosition(position);
     infowindow.open(map);
@@ -143,12 +127,16 @@ function showChatArea(stationName, railwayName, position) {
 }
 
 function sendMessage(stationName, railwayName) {
+    console.log('sendMessage() 関数が呼び出されました。');
     const messageInput = document.getElementById('messageInput');
     const message = messageInput.value.trim();
+    console.log('Save Data:', { stationName, railwayName, message });
+
+    // メッセージが空でない場合のみ保存および表示の処理を行う
     if (message !== '' && selectedStation !== null) {
         const chatData = JSON.parse(localStorage.getItem('chatData')) || {};
         const timestamp = new Date().toLocaleString();
-        const newMessage = { message: message, timestamp: timestamp };
+        const newMessage = { message: message, timestamp: timestamp, railwayName: railwayName };
         chatData[stationName] = chatData[stationName] || [];
         chatData[stationName].push(newMessage);
         localStorage.setItem('chatData', JSON.stringify(chatData));
@@ -164,36 +152,41 @@ function sendMessage(stationName, railwayName) {
     }
 }
 
+
+
 function renderChat(stationName, railwayName) {
     const stationInfo = document.getElementById('station-info');
     const chatData = JSON.parse(localStorage.getItem('chatData')) || {};
     const messages = chatData[stationName] || [];
-    
-    let html = `<h2 class="text-2xl font-bold text-center p-2">${railwayName}</h2><h2 class="text-2xl font-bold text-center p-2">${stationName}</h2>`;
+
+    let html = `<h2>${railwayName}</h2><h2>${stationName}</h2>`;
     messages.forEach((messageObj, index) => {
         const message = messageObj.message;
         const timestamp = messageObj.timestamp;
         html += `
-            <div class="flex flex-row mx-auto">
-                <p class="p-2">${message} - ${timestamp}</p>
-                <button onclick="deleteMessage('${stationName}', '${railwayName}', ${index})" class="p-2 border border-solid rounded-md hover:bg-red-500">削除</button>
+            <div>
+                <p>${message} - ${timestamp}</p>
+                <button onclick="deleteMessage('${stationName}', '${railwayName}', ${index})">削除</button>
             </div>`;
     });
-    html += `<button onclick="deleteAllMessages('${stationName}', '${railwayName}')" class="p-2 m-4 border border-solid rounded-md hover:bg-red-500">全て削除</button>`;
+    html += `<button onclick="deleteAllMessages('${stationName}', '${railwayName}')">全て削除</button>`;
     stationInfo.innerHTML = html;
 }
+
+
+
 
 function updateStationList() {
     const stationList = document.getElementById('station-list');
     stationList.innerHTML = '';
     for (const station in chatStations) {
         const listItem = document.createElement('li');
-        listItem.classList.add('p-2', 'text-xl'); // クラスを追加する
         listItem.textContent = `${chatStations[station]} - ${station}`;
         listItem.onclick = () => {
             const marker = stationMarkers[station];
             if (marker) {
                 map.setCenter(marker.getPosition());
+                map.setZoom(15); // マーカークリック時にズームイン
                 showChatArea(station, chatStations[station], marker.getPosition());
             }
         };
@@ -201,15 +194,15 @@ function updateStationList() {
     }
 }
 
-
 function deleteMessage(stationName, railwayName, index) {
     const chatData = JSON.parse(localStorage.getItem('chatData')) || {};
     if (chatData[stationName]) {
         chatData[stationName].splice(index, 1);
         localStorage.setItem('chatData', JSON.stringify(chatData));
-        renderChat(stationName, railwayName);
+        renderChat(stationName, railwayName); // チャット欄を再描画
     }
 }
+
 
 function deleteAllMessages(stationName, railwayName) {
     const chatData = JSON.parse(localStorage.getItem('chatData')) || {};
@@ -224,14 +217,11 @@ function deleteAllMessages(stationName, railwayName) {
 function loadChatStations() {
     const chatData = JSON.parse(localStorage.getItem('chatData')) || {};
     for (const station in chatData) {
-        const messages = chatData[station].messages || [];
-        const railwayName = chatData[station].railwayName || '不明な路線';
+        const messages = chatData[station];
+        const railwayName = messages.length > 0 ? messages[0].railwayName : '不明な路線';
         chatStations[station] = railwayName;
     }
     updateStationList();
 }
-
-
-
 
 
