@@ -1924,10 +1924,6 @@ video {
      object-fit: scale-down;
 }
 
-.p-2 {
-  padding: 0.5rem;
-}
-
 .p-4 {
   padding: 1rem;
 }
@@ -1986,6 +1982,11 @@ video {
 
 .align-super {
   vertical-align: super;
+}
+
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 
 .text-3xl {
@@ -2445,16 +2446,75 @@ video {
   forced-color-adjust: none;
 }
 
-/* カスタムスタイル */
+.infoWindow {
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  width: 18rem;
+  flex-direction: column;
+}
 
-.st-area {
+.infoWindowP {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.infoWindowInput {
+  width: 15rem;
+  border-width: 1px;
+  border-style: solid;
+  --tw-hue-rotate: hue-rotate(30deg);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.chatTrainBox {
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
   flex-direction: column;
 }
 
-.st-name {
-  @a
+.chatTrainTitle {
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
 
+.chatBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 0.375rem;
+  border-width: 1px;
+  padding: 0.5rem;
+}
+
+.chatM {
+  padding: 0.5rem;
+  text-align: center;
+}
+
+.deleteBtn {
+  border-width: 1px;
+  padding: 0.5rem;
+}
+
+.deleteBtn:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(252 165 165 / var(--tw-bg-opacity));
+}
+
+.allDeleteBtn {
+  padding-top: 0.5rem;
+  font-weight: 700;
+}
+
+.allDeleteBtn:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(239 68 68 / var(--tw-bg-opacity));
 }
 
 @media (min-width: 640px) {

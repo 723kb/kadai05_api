@@ -7,13 +7,14 @@ let selectedStation = null;
 const chatStations = {};
 const stationMarkers = {};
 
-// 位置情報を取得し、近くの駅情報を取得する関数
+// マップと情報ウィンドウの初期化
 function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), { // mapの初期化
+    const mapOptions = {
         zoom: 12,
         center: { lat: 35.6895, lng: 139.6917 } // 東京の中心
-    });
-    infowindow = new google.maps.InfoWindow();  // infowindowの初期化
+    };
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    infowindow = new google.maps.InfoWindow();
 
     // ユーザーの位置情報の取得
     if (navigator.geolocation) {  // 位置情報の取得
@@ -154,7 +155,14 @@ function getMarkerIcon(distance) {
 // 各駅のチャットエリアを表示する関数
 function showChatArea(stationName, railwayName, position) {
     // HTMLコンテンツの生成
-    const content = `<div><strong>${stationName}（${railwayName}）</strong><br><input type="text" id="messageInput"><button id="sendMessageButton" onclick="sendMessage('${stationName}', '${railwayName}')">送信</button><div id="chatMessages"></div></div>`;
+    const content = `<div class="infoWindow">
+    <p class="infoWindowP">${railwayName}</p>
+    <p class="infoWindowP">${stationName}</p>
+    <div class="infoWindowInputArea">
+    <input type="text" id="messageInput" class="infoWindowInput">
+    <button id="sendMessageButton" onclick="sendMessage('${stationName}', '${railwayName}')" class="sendBtn">送信</button>
+    </div>
+    </div>`;
     // infowindowの設定
     infowindow.setContent(content);  // HTMLコンテンツを内容に設定
     infowindow.setPosition(position);  // 地図上の指定された位置に配置
@@ -203,17 +211,20 @@ function renderChat(stationName, railwayName) {
     const messages = chatData[stationName] || []; // 表示したい駅(stationName)のチャットメッセージを取得 なければ空配列を代入
 
     // HTMLの生成
-    let html = `<h2>${railwayName}</h2><h2>${stationName}</h2>`;
+    let html = `<div class="chatTrainBox">
+    <h2 class="chatTrainTitle">${railwayName}</h2>
+    <h2 class="chatTrainTitle">${stationName}</h2>
+    </div>`;
     messages.forEach((messageObj, index) => {
         const message = messageObj.message;
         const timestamp = messageObj.timestamp;
         html += `
-            <div>
-                <p>${message} - ${timestamp}</p>
-                <button onclick="deleteMessage('${stationName}', '${railwayName}', ${index})">削除</button>
+            <div class="chatBox">
+                <p class="chatM">${message} - ${timestamp}</p>
+                <button onclick="deleteMessage('${stationName}', '${railwayName}', ${index})" class="deleteBtn">削除</button>
             </div>`;
     });
-    html += `<button onclick="deleteAllMessages('${stationName}', '${railwayName}')">全て削除</button>`;
+    html += `<button onclick="deleteAllMessages('${stationName}', '${railwayName}')" class="allDeleteBtn">全て削除</button>`;
     stationInfo.innerHTML = html;
 }
 

@@ -2,28 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-/* カスタムスタイル */
-.st-area {
-  @apply flex flex-col;
+.infoWindow {
+  @apply w-72 flex flex-col  mx-auto;
 }
 
-/* なぜか効かない */
-/* .st-name {
-  @apply text-xl font-bold m-2;
+.infoWindowP {
+  @apply p-2 text-sm;
 }
 
-.rw-name {
-  @apply text-lg font-bold m-2;
-} */
-
-.input-chat {
-  @apply flex flex-row:
+/* 高さがあたってない 枠線の丸さも当たってない */
+.infoWindowInput {
+  @apply w-full border h-30 rounded-md;
 }
 
-/* .input {
-  @apply border border-solid rounded-md;
+/* ボタンとの余白がおかしい */
+.infoWindowInputArea {
+  @apply flex flex-row justify-around mx-auto;
 }
 
-.send-btn {
-  @apply border border-solid rounded-md hover:bg-green-500;
-} */
+/* あたってない */
+.sendBtn {
+  @apply ml-2 border hover:bg-green-200;
+}
+
+.chatTrainBox {
+  @apply flex flex-col  mx-auto;
+}
+
+.chatTrainTitle {
+  @apply text-lg font-bold text-center p-2;
+}
+
+.chatBox {
+  @apply flex flex-col justify-center border rounded-md p-2;
+}
+
+.chatM {
+  @apply p-2 text-center;
+}
+
+.deleteBtn {
+  @apply   p-2 border hover:bg-red-300;
+}
+
+.allDeleteBtn {
+  @apply   pt-2 font-bold hover:bg-red-500;
+}
