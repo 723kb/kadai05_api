@@ -10,41 +10,47 @@
   @apply p-2 text-sm;
 }
 
-/* 高さがあたってない 枠線の丸さも当たってない */
+
 .infoWindowInput {
-  @apply w-full border h-30 rounded-md;
+  @apply w-full border h-10 rounded-md;
 }
 
-/* ボタンとの余白がおかしい */
 .infoWindowInputArea {
-  @apply flex flex-row justify-around mx-auto;
+  @apply flex flex-row justify-around;
 }
 
-/* あたってない */
 .sendBtn {
-  @apply ml-2 border hover:bg-green-200;
+  @apply ml-2 p-2 border rounded-md hover:bg-green-300;
 }
 
 .chatTrainBox {
-  @apply flex flex-col  mx-auto;
+  @apply w-full flex flex-col  mx-auto rounded-md;
 }
 
 .chatTrainTitle {
-  @apply text-lg font-bold text-center p-2;
+  @apply text-lg font-bold text-center  p-2;
 }
 
 .chatBox {
-  @apply flex flex-col justify-center border rounded-md p-2;
+  @apply flex flex-col justify-center border rounded-md m-2 p-2;
 }
 
 .chatM {
-  @apply p-2 text-center;
+  @apply m-2 p-2 text-center;
+}
+
+.timeDivBtn {
+  @apply flex flex-row justify-center;
 }
 
 .deleteBtn {
-  @apply   p-2 border hover:bg-red-300;
+  @apply  m-2  p-2 border hover:bg-red-200 rounded-md;
 }
 
 .allDeleteBtn {
-  @apply   pt-2 font-bold hover:bg-red-500;
+  @apply   m-2 p-2 font-bold hover:bg-red-400 rounded-md;
+}
+
+ul:hover {
+  @apply transform duration-1000 scale-125 ;
 }

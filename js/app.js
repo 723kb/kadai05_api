@@ -160,7 +160,7 @@ function showChatArea(stationName, railwayName, position) {
     <p class="infoWindowP">${stationName}</p>
     <div class="infoWindowInputArea">
     <input type="text" id="messageInput" class="infoWindowInput">
-    <button id="sendMessageButton" onclick="sendMessage('${stationName}', '${railwayName}')" class="sendBtn">送信</button>
+    <button id="sendMessageButton" onclick="sendMessage('${stationName}', '${railwayName}')" class="sendBtn"><i class="fas fa-paper-plane"></i></button>
     </div>
     </div>`;
     // infowindowの設定
@@ -211,7 +211,7 @@ function renderChat(stationName, railwayName) {
     const messages = chatData[stationName] || []; // 表示したい駅(stationName)のチャットメッセージを取得 なければ空配列を代入
 
     // HTMLの生成
-    let html = `<div class="chatTrainBox">
+    let html = `<div class="chatTrainBox ${getRailwayColorClass(railwayName)}">
     <h2 class="chatTrainTitle">${railwayName}</h2>
     <h2 class="chatTrainTitle">${stationName}</h2>
     </div>`;
@@ -220,12 +220,45 @@ function renderChat(stationName, railwayName) {
         const timestamp = messageObj.timestamp;
         html += `
             <div class="chatBox">
-                <p class="chatM">${message} - ${timestamp}</p>
-                <button onclick="deleteMessage('${stationName}', '${railwayName}', ${index})" class="deleteBtn">削除</button>
+                <p class="chatM">${message}</p>
+                <div class="timeDivBtn">
+                <p class="chatM">${timestamp}</p>
+                <button onclick="deleteMessage('${stationName}', '${railwayName}', ${index})"><i class="fa-regular fa-trash-can deleteBtn"></i></button>
+                </div>
             </div>`;
     });
-    html += `<button onclick="deleteAllMessages('${stationName}', '${railwayName}')" class="allDeleteBtn">全て削除</button>`;
+    html += `<button onclick="deleteAllMessages('${stationName}', '${railwayName}')"><i class="fas fa-trash allDeleteBtn"></i></button>`;
     stationInfo.innerHTML = html;
+}
+
+// 路線名に応じて背景色を選択する関数
+function getRailwayColorClass(railwayName) {
+    switch (railwayName) {
+        case '東京メトロ千代田線':
+            return 'bg-[#0bba86]';
+        case '東京メトロ銀座線':
+            return 'bg-[#FF9700]';
+        case '東京メトロ半蔵門線':
+            return 'bg-[#8E75DB]';
+        case '東京メトロ日比谷線':
+            return 'bg-[#B6B6AC]';
+        case '東京メトロ丸ノ内線':
+            return 'bg-[#F33137]';
+        case '東京メトロ南北線':
+            return 'bg-[#02AB9E]';
+        case '東京メトロ東西線':
+            return 'bg-[#0298C3]';
+        case '東京メトロ有楽町線':
+            return 'bg-[#C3A56D]';
+        case '東京メトロ副都心線':
+            return 'bg-[#9D5D32]';
+        case '東京メトロ日比谷線支線':
+            return 'bg-[#B6B6AC]';
+        case '東京メトロ丸ノ内線支線':
+            return 'bg-[#F33137]';
+        default:
+            return 'bg-gray-500'; // デフォルトの背景色（灰色）を設定
+    }
 }
 
 // チャット投稿がある駅のリストを更新し表示する関数
@@ -235,7 +268,14 @@ function updateStationList() {
     // for...inループでchatStationsオブジェクト内の各要素にアクセス
     for (const station in chatStations) {
         const listItem = document.createElement('li');  // liを生成
-        listItem.textContent = `${chatStations[station]} - ${station}`;  // 駅名と路線名を含む
+        const stationName = chatStations[station];
+        const railwayName = station;
+
+        // 路線ごとのカラーを取得して背景色として設定
+        const railwayColor = getRailwayColorClass(railwayName);
+        listItem.style.backgroundColor = railwayColor;
+
+        listItem.textContent = `${stationName} - ${railwayName}`;  // 駅名と路線名を含む
         listItem.onclick = () => {  // マーカーがクリックされた時に実行される関数
             const marker = stationMarkers[station];
             if (marker) {
