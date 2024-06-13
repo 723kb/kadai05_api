@@ -10,6 +10,7 @@ kadai05_api
 ## ③DEMO
 
 https://723kb.github.io/map_chat/
+
 ![DEMO]
 (https://github.com/723kb/map_chat/assets/168268533/0b8ed8cd-30c7-48a0-90be-1fed21f3e3ff)
 
@@ -21,7 +22,7 @@ https://723kb.github.io/map_chat/
 ## ⑤工夫した点・こだわった点
 
 - APIを組み合わせて課題を作ることを意識した。
-- 見やすさ、駅カラーリングにこだわった。
+- 見やすさ、駅カラーリングにこだわった。画像は生成AIで作成した。
 
 ## ⑥難しかった点・次回トライしたいこと(又は機能)
 
