@@ -5,7 +5,7 @@ module.exports = {
       extend: {
         height: {
           '30': '7.5rem', // 7.5rem = 120px
-        }
+        },
       },
     },
     plugins: [],

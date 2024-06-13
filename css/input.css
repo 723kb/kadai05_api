@@ -12,7 +12,7 @@
 
 
 .infoWindowInput {
-  @apply w-full border h-10 rounded-md;
+  @apply w-full p-2 border h-10 rounded-md;
 }
 
 .infoWindowInputArea {
@@ -32,7 +32,7 @@
 }
 
 .chatBox {
-  @apply flex flex-col justify-center border rounded-md m-2 p-2;
+  @apply flex flex-col justify-center border rounded-md my-2 p-2;
 }
 
 .chatM {
@@ -51,6 +51,9 @@
   @apply   m-2 p-2 font-bold hover:bg-red-400 rounded-md;
 }
 
-ul:hover {
+li:hover {
   @apply transform duration-1000 scale-125 ;
+}
+li {
+  @apply m-2;
 }

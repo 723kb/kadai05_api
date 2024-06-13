@@ -1,3 +1,10 @@
+// ローダー画像の表示
+window.addEventListener('load', function () {
+    setTimeout(function () {
+        document.getElementById('loader').style.display = 'none';
+    }, 2000);
+});
+
 // ODPT API KEY
 const ODPT_API_KEY = '[YOUR_ODPT_API_KEY]';
 
@@ -19,14 +26,15 @@ function initMap() {
     // ユーザーの位置情報の取得
     if (navigator.geolocation) {  // 位置情報の取得
         // getCurrentPositionで現在地を取得 成功した場合positionオブジェクトを返す
-        navigator.geolocation.getCurrentPosition((position) => {
+        navigator.geolocation.getCurrentPosition((position) => { // 第二引数 エラーハンドリング部分
+            // 成功時の処理
             const userLocation = {
                 lat: position.coords.latitude,  // 緯度
                 lng: position.coords.longitude  // 経度
             };
             map.setCenter(userLocation);  // 地図の中心を現在地に設定
             fetchNearbyStations(userLocation);  // fetchNearbyStations関数で現在地近くの駅情報を取得
-        }, () => {   // 位置情報の取得に失敗した時、handleLocationErrorでエラーメッセージを表示
+        }, () => {   // 失敗時の処理 handleLocationErrorでエラーメッセージを表示
             handleLocationError(true, map.getCenter());
         });
     } else {  // ブラウザが位置情報の取得に対応していない場合も、同様
@@ -54,13 +62,13 @@ async function fetchNearbyStations(userLocation) {
     try {
         const response = await fetch(url);  // 指定されたURLからデータを取得
         if (!response.ok) {  // レスポンスがOK出ない場合にエラーをスローする
-            throw new Error('Failed to fetch station data');
+            throw new Error('駅データの取得に失敗しました');
         }
         const data = await response.json();  // レスポンスデータをJSON形式に変換
         // APIから取得したデータをループして各駅の情報を処理
         data.forEach(station => {
-            const lat = station['geo:lat'];
-            const lng = station['geo:long'];  // 駅の緯度と経度を取得
+            const lat = station['geo:lat'];  // JSONオブジェクトから緯度を取得 キーが文字列のため''
+            const lng = station['geo:long'];  // JSONオブジェクトから経度を取得
             const name = station['odpt:stationTitle']['ja'];  // 駅名を日本語で取得
             const railwayCode = station['odpt:railway'].split(':')[1];  // 路線コードを取得し、:operator:TokyoMetroを除く
             const railwayName = getRailwayName(railwayCode);  // 路線コードから路線名を取得
@@ -91,7 +99,7 @@ async function fetchNearbyStations(userLocation) {
 
 // 路線コードから路線名を受け取る関数
 function getRailwayName(code) {
-    const railwayNames = {  // キーは路線コード、値が路線名
+    const railwayNames = {  // キー:路線コード 値:路線名
         'TokyoMetro.Chiyoda': '東京メトロ千代田線',
         'TokyoMetro.Ginza': '東京メトロ銀座線',
         'TokyoMetro.Hanzomon': '東京メトロ半蔵門線',
@@ -108,7 +116,7 @@ function getRailwayName(code) {
 }
 
 // 2つの位置情報から、距離を求める関数
-// 全くわからないのでコピペ
+// 全くわからないのでコピペ もはや数学
 function getDistance(location1, location2) {
     // 地球の半径（km）
     const R = 6371;
@@ -129,7 +137,8 @@ function getDistance(location1, location2) {
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
     // 2点間の距離を計算して返す（km単位）
-    return R * c;
+    const distance = R * c;
+    return distance;
 }
 
 // 距離に応じて異なる色とサイズのマーカーアイコンを立てる関数
@@ -209,6 +218,9 @@ function renderChat(stationName, railwayName) {
     const stationInfo = document.getElementById('station-info');
     const chatData = JSON.parse(localStorage.getItem('chatData')) || {};  // キーがchatDataのデータを取得 なければ空オブジェクトを代入
     const messages = chatData[stationName] || []; // 表示したい駅(stationName)のチャットメッセージを取得 なければ空配列を代入
+
+    // メッセージを日付の降順にソートする
+    messages.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
     // HTMLの生成
     let html = `<div class="chatTrainBox ${getRailwayColorClass(railwayName)}">
