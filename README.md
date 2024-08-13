@@ -9,7 +9,7 @@ kadai05_api
 
 ## ③DEMO
 
-https://723kb.github.io/map_chat/
+https://723kb.github.io/kadai05_api/
 
 ## ④作ったアプリケーション用のIDまたはPasswordがある場合
 
